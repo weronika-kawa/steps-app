@@ -1,41 +1,41 @@
-# Steps App
+# 🏃 Steps App
 
 A simple Flask-based web application for tracking and comparing daily step counts between two users.
 
-The application uses:
+Built with:
 
 * Flask
 * SQLite
 * Gunicorn
-* Nginx (optional, for production)
+* Nginx (optional, production deployment)
 * Progressive Web App (PWA) support
 
 ---
 
-# Features
+# 📊 Features
 
-- 🏃 Daily step tracking for two competitors
-- 📅 Log steps for any day and edit previous entries
-- 🏆 Automatic daily winner determination
-- 📈 Overall leaderboard based on cumulative steps
-- 🎯 Daily goal enforcement (11,000 step cap)
-- 📊 Progress dashboard and performance summaries
-- 📚 Complete historical activity archive
-- 📱 Progressive Web App (PWA) support
-- 🔌 Offline-first experience with automatic synchronization
-- 💾 Lightweight SQLite database
-- 🔄 JSON API for integrations and synchronization
+* 🏃 Daily step tracking for two competitors
+* 📅 Add and edit step entries for any day
+* 🏆 Automatic daily winner calculation
+* 📈 Overall leaderboard based on cumulative steps
+* 🎯 Daily goal enforcement (11,000 step cap)
+* 📊 Progress dashboard with performance summaries
+* 📚 Full historical activity archive
+* 📱 Progressive Web App (PWA) support
+* 🔌 Offline-first experience with sync capability
+* 💾 Lightweight SQLite database
+* 🔄 JSON API for integrations and synchronization
 
 ---
 
-# Requirements
+# ⚙️ Requirements
 
-Before starting, make sure the following software is installed:
+Before starting, ensure:
 
 * Python 3.14+ (or compatible Python 3 version)
 * Git
 
-Check your installation:
+Check installation:
 
 ```bash
 python3 --version
@@ -44,30 +44,26 @@ git --version
 
 ---
 
-# Installation
+# 📦 Installation
 
-## 1. Clone the repository
+## 1. Clone repository
 
 ```bash
-git clone https://github.com/YOUR_USERNAME/steps-app.git
+git clone https://github.com/weronika-kawa/steps-app.git
 cd steps-app
 ```
 
-Replace `YOUR_USERNAME` with the actual GitHub username.
-
 ---
 
-## 2. Create a virtual environment
-
-Create an isolated Python environment:
+## 2. Create virtual environment
 
 ```bash
 python3 -m venv venv
 ```
 
-Activate it:
+Activate:
 
-### Linux / Ubuntu / macOS
+### Linux / macOS / Ubuntu
 
 ```bash
 source venv/bin/activate
@@ -79,29 +75,20 @@ source venv/bin/activate
 venv\Scripts\Activate.ps1
 ```
 
-You should now see `(venv)` at the beginning of your terminal prompt.
-
 ---
 
 ## 3. Install dependencies
 
-Upgrade pip:
-
 ```bash
 pip install --upgrade pip
-```
-
-Install project dependencies:
-
-```bash
 pip install -r requirements.txt
 ```
 
 ---
 
-## 4. Create environment variables
+## 4. Environment variables
 
-Create a `.env` file:
+Create `.env`:
 
 ```bash
 nano .env
@@ -113,91 +100,45 @@ Add:
 SECRET_KEY=change-me-to-a-random-secret-string
 ```
 
-Save the file.
-
 ---
 
-## 5. Start the application
-
-Run:
+## 5. Run app
 
 ```bash
 python app.py
 ```
 
-You should see something similar to:
+App runs at:
 
-```text
-* Running on http://127.0.0.1:5000
 ```
-
----
-
-## 6. Open the application
-
-Open your browser and visit:
-
-```text
 http://127.0.0.1:5000
 ```
 
-The application should now be running.
-
 ---
 
-# Database
+# 🗄️ Database
 
-The application automatically creates the SQLite database on first startup.
+SQLite database is created automatically on first run.
 
-Database file:
+File:
 
-```text
+```
 steps_app.db
 ```
 
-No manual database setup is required.
-
 ---
 
-# Running with Gunicorn
-
-For a more production-like setup:
+# 🚀 Production (Gunicorn)
 
 ```bash
 gunicorn -w 2 -b 127.0.0.1:8000 app:app
 ```
 
-Open:
-
-```text
-http://127.0.0.1:8000
-```
-
 ---
 
-# Production Deployment (Ubuntu + Nginx)
+# 🌐 Deployment (Ubuntu + Nginx)
 
-This section assumes:
-
-* Ubuntu Server
-* Nginx installed
-* Application located in:
-
-```text
-/home/USERNAME/steps-app
-```
-
----
-
-## Start Gunicorn with a Unix Socket
-
-Activate the virtual environment:
-
-```bash
-source venv/bin/activate
-```
-
-Run:
+## Gunicorn (socket mode)
 
 ```bash
 gunicorn \
@@ -208,15 +149,7 @@ gunicorn \
 
 ---
 
-## Nginx Configuration
-
-Create:
-
-```bash
-sudo nano /etc/nginx/sites-available/steps_app
-```
-
-Add:
+## Nginx config
 
 ```nginx
 server {
@@ -229,50 +162,27 @@ server {
 }
 ```
 
-Enable the site:
-
-```bash
-sudo ln -s /etc/nginx/sites-available/steps_app /etc/nginx/sites-enabled/
-```
-
-Test configuration:
-
-```bash
-sudo nginx -t
-```
-
-Restart Nginx:
-
-```bash
-sudo systemctl restart nginx
-```
-
 ---
 
-# Updating the Application
-
-Pull the latest version from GitHub:
+# 🔄 Update app
 
 ```bash
 git pull origin main
-```
-
-Restart the service:
-
-```bash
 sudo systemctl restart steps-app
 ```
 
 ---
 
-# Project Structure
+# 📁 Project structure
 
-```text
+```
 steps-app/
 ├── app.py
 ├── requirements.txt
 ├── .env
 ├── steps_app.db
+├── steps_app.sock
+├── deploy.sh
 ├── static/
 ├── templates/
 ├── venv/
@@ -281,32 +191,50 @@ steps-app/
 
 ---
 
-# Files That Should NOT Be Committed
+# 🚫 .gitignore
 
-The following files should be excluded using `.gitignore`:
-
-```text
+```
 venv/
 __pycache__/
 *.pyc
 .env
 steps_app.db
+steps-app.sock
 ```
 
 ---
 
-# Future Improvements
+# 🚀 Deployment workflow
 
-Possible future enhancements:
+## Local
 
-* Docker deployment
+```bash
+git add .
+git commit -m "Update feature"
+git push origin main
+```
+
+## Server
+
+```bash
+git pull origin main
+sudo systemctl restart steps-app
+```
+
+---
+
+# 🔮 Future improvements
+
+* Docker support
 * GitHub Actions CI/CD
-* PostgreSQL support
-* HTTPS with Let's Encrypt
+* PostgreSQL migration
+* HTTPS via Let’s Encrypt
 * Automated backups
 
 ---
 
-# License
+# 📄 License
 
-This project is provided for educational and personal use.
+For educational and personal use.
+
+---
