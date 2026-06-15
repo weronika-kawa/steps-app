@@ -3,3 +3,4 @@ __pycache__/
 *.pyc
 .env
 steps_app.db
+steps-app.sock
