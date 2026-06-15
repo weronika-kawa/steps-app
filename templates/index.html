@@ -1,0 +1,1474 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kto zrobi więcej kroków do końca czerwca?</title>
+    
+    <!-- PWA Meta Tags -->
+    <link rel="manifest" href="/manifest.json">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Kroki & Kawy">
+    <link rel="apple-touch-icon" href="/static/icon.svg">
+    <meta name="theme-color" content="#4A2C2A">
+
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&family=Bebas+Neue&display=swap" rel="stylesheet">
+    <!-- Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        /* Paleta kawowa */
+        :root {
+            --coffee-dark: #4A2C2A;    /* Ciemnobrązowy, jak espresso */
+            --coffee-medium: #7F5539;  /* Średni brąz */
+            --coffee-light: #B08968;   /* Jasnobrązowy, jak latte */
+            --cream-foam: #DDB892;     /* Kremowy, jak mleczna pianka */
+            --accent-milk: #EDE0D4;    /* Prawie biały, jak mleko */
+            --gold-sugar: #B5840B;     /* Akcent złoty, jak cukier trzcinowy */
+            
+            --text-dark: var(--coffee-dark);
+            --text-light: var(--accent-milk);
+            --shadow: 0 6px 20px rgba(0,0,0,0.15);
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: var(--accent-milk);
+            color: var(--text-dark);
+            line-height: 1.6;
+            background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="200" height="200" viewBox="0 0 200 200"><rect width="100%" height="100%" fill="%23EDE0D4"/><circle cx="100" cy="100" r="80" fill="%23DDB892" opacity="0.3"/><circle cx="50" cy="150" r="40" fill="%23B08968" opacity="0.2"/><circle cx="150" cy="50" r="60" fill="%237F5539" opacity="0.1"/></svg>');
+            background-size: 150px;
+            background-repeat: repeat;
+        }
+
+        .container {
+            max-width: 980px;
+            margin: auto;
+            background: linear-gradient(145deg, var(--accent-milk) 0%, var(--cream-foam) 100%);
+            padding: 30px;
+            border-radius: 20px;
+            box-shadow: var(--shadow);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .coffee-stain {
+            position: absolute;
+            width: 150px;
+            height: 150px;
+            background-color: var(--coffee-medium);
+            border-radius: 50%;
+            opacity: 0.1;
+            filter: blur(20px);
+            z-index: 0;
+        }
+        .stain-top-left { top: -50px; left: -50px; transform: rotate(20deg); }
+        .stain-bottom-right { bottom: -70px; right: -70px; width: 200px; height: 200px; transform: rotate(-40deg); }
+
+        .bold-winner {
+            font-weight: 700;
+            color: var(--coffee-dark); /* Kolor zwycięzcy */
+            font-size: 1.1em;
+        }
+        /* Responsywność dla historii tabeli */
+        @media (max-width: 600px) {
+            .history-section table,
+            .history-section thead,
+            .history-section tbody,
+            .history-section th,
+            .history-section td,
+            .history-section tr {
+                display: block;
+            }
+            .history-section thead tr {
+                position: absolute;
+                top: -9999px;
+                left: -9999px;
+            }
+            .history-section tr { border: 1px solid var(--border-color); margin-bottom: 10px; }
+            .history-section td {
+                border: none;
+                border-bottom: 1px solid var(--border-color);
+                position: relative;
+                padding-left: 50%;
+                text-align: right;
+            }
+            .history-section td:before {
+                position: absolute;
+                top: 6px;
+                left: 6px;
+                width: 45%;
+                padding-right: 10px;
+                white-space: nowrap;
+                text-align: left;
+                font-weight: 600;
+                color: var(--secondary-color);
+            }
+            .history-section td:nth-of-type(1):before { content: "Data"; }
+            .history-section td:nth-of-type(2):before { content: "Weronika"; }
+            .history-section td:nth-of-type(3):before { content: "Michał"; }
+        }
+
+        h1, h2, h3 {
+            font-family: 'Bebas Neue', sans-serif;
+            color: var(--coffee-dark);
+            margin-bottom: 25px;
+            text-align: center;
+            letter-spacing: 2px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+        }
+        h1 { font-size: 3.5em; line-height: 1; }
+        h1 small { font-family: 'Poppins', sans-serif; font-size: 0.4em; color: var(--coffee-medium); display: block; margin-top: 5px; }
+        h2 { font-size: 2.2em; }
+        h3 { font-size: 1.6em; }
+
+        .card {
+            background-color: var(--accent-milk);
+            border-radius: 15px;
+            box-shadow: var(--shadow);
+            padding: 25px;
+            margin-bottom: 30px;
+            border: 2px solid var(--cream-foam);
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Formularze */
+        .form-section {
+            background: linear-gradient(135deg, var(--cream-foam) 0%, var(--accent-milk) 100%);
+            border: 2px dashed var(--coffee-light); /* Kreskowana ramka */
+        }
+        form label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: var(--coffee-dark);
+            font-size: 1.1em;
+        }
+        form input[type="number"],
+        form input[type="date"] {
+            width: calc(100% - 24px);
+            padding: 12px;
+            margin-bottom: 18px;
+            border: 1px solid var(--coffee-light);
+            border-radius: 8px;
+            font-size: 1.1em;
+            background-color: #fff;
+            box-shadow: inset 0 1px 3px rgba(0,0,0,0.1);
+        }
+        form button {
+            background-color: var(--coffee-dark);
+            color: var(--text-light);
+            padding: 15px 30px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1.2em;
+            font-weight: 700;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+            display: block;
+            width: 100%;
+            margin-top: 20px;
+            letter-spacing: 1px;
+        }
+        form button:hover {
+            background-color: var(--coffee-medium);
+            transform: translateY(-2px);
+        }
+
+        /* Wiadomości flash */
+        .flash-message {
+            padding: 15px 25px;
+            margin-bottom: 25px;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 1.05em;
+            animation: fadeInOut 7s forwards;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        .flash-message.success { background-color: #d4edda; color: #155724; border: 1px solid #c3e6cb; } /* Zieleń dla sukcesu */
+        .flash-message.error { background-color: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; }   /* Czerwień dla błędu */
+        .flash-message.warning { background-color: #fff3cd; color: #856404; border: 1px solid #ffeeba; } /* Pomarańcz dla ostrzeżenia */
+
+        @keyframes fadeInOut {
+            0% { opacity: 1; display: block; }
+            80% { opacity: 1; }
+            100% { opacity: 0; display: none; }
+        }
+
+        /* Globalny zwycięzca */
+        .global-winner-section {
+            text-align: center;
+            margin-bottom: 30px;
+            padding: 25px;
+            background: linear-gradient(45deg, var(--gold-sugar) 0%, var(--coffee-light) 100%);
+            color: var(--text-light);
+            border-radius: 15px;
+            box-shadow: var(--shadow);
+            animation: pulse 2s infinite alternate;
+            position: relative;
+            overflow: hidden;
+        }
+        .global-winner-section::before {
+            content: '\f091'; /* Ikona pucharu */
+            font-family: 'Font Awesome 6 Free';
+            font-weight: 900;
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            font-size: 3em;
+            color: rgba(255,255,255,0.3);
+        }
+         .global-winner-section::after {
+            content: '\f091'; /* Ikona pucharu */
+            font-family: 'Font Awesome 6 Free';
+            font-weight: 900;
+            position: absolute;
+            bottom: 10px;
+            right: 10px;
+            font-size: 3em;
+            color: rgba(255,255,255,0.3);
+            transform: scaleX(-1);
+        }
+
+        .global-winner-section h2 {
+            color: var(--text-light);
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+        .global-winner-section p {
+            font-size: 1.3em;
+            font-weight: 600;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.2);
+        }
+        .global-winner-section .winner-name {
+            font-size: 1.5em;
+            color: yellow;
+        }
+
+        @keyframes pulse {
+            from { transform: scale(1); }
+            to { transform: scale(1.02); }
+        }
+
+
+        /* Tabele */
+        table {
+            width: 100%;
+            border-collapse: separate; /* Używamy separate dla zaokrąglonych narożników komórek */
+            border-spacing: 0;
+            margin-top: 20px;
+            background-color: var(--accent-milk);
+            border-radius: 10px;
+            overflow: hidden; /* Ważne dla border-radius */
+            box-shadow: var(--shadow);
+        }
+        th, td {
+            border-bottom: 1px solid var(--cream-foam);
+            padding: 15px;
+            text-align: left;
+        }
+        th {
+            background-color: var(--coffee-medium);
+            color: var(--text-light);
+            font-weight: 700;
+            text-transform: uppercase;
+            font-size: 0.9em;
+            letter-spacing: 0.5px;
+        }
+        th:first-child { border-top-left-radius: 10px; }
+        th:last-child { border-top-right-radius: 10px; }
+        tr:last-child td { border-bottom: none; } /* Ostatni wiersz bez dolnej ramki */
+
+        tr:nth-child(even) {
+            background-color: var(--accent-milk);
+        }
+        tr:nth-child(odd) {
+            background-color: #f3f3f3; /* Lekko ciemniejszy dla parzystych */
+        }
+
+        .no-data {
+            text-align: center;
+            color: var(--secondary-color);
+            padding: 20px;
+            font-style: italic;
+        }
+        
+        /* Dzień tygodnia */
+        .date-weekday { 
+            font-size: 0.85em; 
+            color: var(--coffee-light); 
+            display: block; 
+            font-weight: 400; /* Normalna waga czcionki */
+            margin-top: 2px;
+        }
+        
+        /* Sekcja porównawcza (paski postępu) */
+        .comparison-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 25px;
+        }
+        @media (min-width: 768px) {
+            .comparison-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+        .comparison-item {
+            text-align: center;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.08);
+        }
+        .comparison-item h3 {
+            color: var(--coffee-dark);
+            margin-bottom: 10px;
+            font-size: 1.8em;
+        }
+        .comparison-item p {
+            font-size: 1.1em;
+            color: var(--text-dark);
+        }
+        .progress-bar-container {
+            width: 100%;
+            background-color: var(--cream-foam);
+            border-radius: 15px;
+            margin-top: 15px;
+            height: 35px;
+            overflow: hidden;
+            position: relative;
+        }
+        .progress-bar {
+            height: 100%;
+            width: 0%;
+            border-radius: 15px;
+            background: linear-gradient(90deg, #6c757d 0%, var(--success-color) 100%); /* Domyślny, ale zmienimy */
+            display: flex;
+            align-items: center;
+            justify-content: flex-end; /* Tekst na końcu paska */
+            padding-right: 10px;
+            color: var(--text-light);
+            font-weight: 700;
+            font-size: 1.1em;
+            transition: width 0.8s ease-in-out, background 0.5s ease;
+            position: relative;
+            z-index: 1;
+        }
+        .progress-bar::before { /* Kawowy wzorek na pasku */
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 10 10"><circle cx="5" cy="5" r="3" fill="rgba(255,255,255,0.2)"/></svg>');
+            background-size: 10px 10px;
+            z-index: -1;
+        }
+        /* Kolory pasków */
+        .progress-bar.red { background: linear-gradient(90deg, #a7333f 0%, var(--danger-color) 100%); }
+        .progress-bar.orange { background: linear-gradient(90deg, #e08b00 0%, var(--warning-color) 100%); }
+        .progress-bar.green { background: linear-gradient(90deg, #1d7e2e 0%, var(--success-color) 100%); }
+
+        .progress-text { margin-left: auto; }
+        .limit-exceeded { color: var(--danger-color); font-weight: 600; margin-top: 5px; }
+
+
+        /* Last day summary */
+        .last-day-summary-section {
+            text-align: center;
+            border: 2px solid var(--coffee-light);
+            background: linear-gradient(135deg, var(--cream-foam) 0%, #ffffff 100%);
+        }
+        .last-day-summary-section h2 { color: var(--coffee-medium); }
+        .last-day-summary-section ul {
+            list-style: none;
+            padding: 0;
+            margin-top: 15px;
+        }
+        .last-day-summary-section li {
+            font-size: 1.1em;
+            margin-bottom: 8px;
+            color: var(--text-dark);
+        }
+        .last-day-winner-info {
+            font-size: 1.3em;
+            font-weight: 700;
+            margin-bottom: 15px;
+        }
+        .last-day-winner-info .winner-name { color: var(--success-color); }
+        .last-day-winner-info .diff-steps { color: var(--gold-sugar); }
+        .last-day-draw { color: var(--info-color); font-weight: 600; font-size: 1.2em;}
+
+
+        /* Stopka */
+        footer {
+            text-align: center;
+            margin-top: 50px;
+            padding-top: 25px;
+            border-top: 1px dashed var(--coffee-light);
+            color: var(--coffee-medium);
+            font-size: 0.95em;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Styl paska synchronizacji PWA */
+        .sync-banner {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            position: relative;
+            z-index: 10;
+        }
+        .sync-banner.online {
+            background-color: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        .sync-banner.offline {
+            background-color: #fff3cd;
+            color: #856404;
+            border: 1px solid #ffeeba;
+        }
+        .sync-banner .sync-info {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .sync-banner .sync-btn {
+            background-color: var(--coffee-dark);
+            color: var(--text-light);
+            border: none;
+            padding: 6px 12px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.9em;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            transition: background-color 0.2s;
+        }
+        .sync-banner .sync-btn:hover {
+            background-color: var(--coffee-medium);
+        }
+        .sync-banner .sync-btn:disabled {
+            background-color: #ccc;
+            cursor: not-allowed;
+        }
+        .sync-banner.offline .sync-btn {
+            display: none;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        .fa-spin-custom {
+            animation: spin 1s linear infinite;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <button id="install-btn" style="display:none;margin-bottom:15px;padding:10px 15px;border:none;border-radius:8px;background:#4A2C2A;color:white;font-weight:600;cursor:pointer;">Zainstaluj aplikację</button>
+        <!-- Users management removed: fixed users Weronika & Mich -->
+        <!-- Kawowe plamy jako tło -->
+        <div class="coffee-stain stain-top-left"></div>
+        <div class="coffee-stain stain-bottom-right"></div>
+
+        <h1>Szalony Challenge <br><small>Kto zrobi więcej kroków do końca czerwca?</small></h1>
+
+        <!-- PWA Sync Status Banner -->
+        <div id="sync-banner" class="sync-banner online">
+            <div class="sync-info">
+                <i id="sync-icon" class="fas fa-wifi"></i>
+                <span id="sync-status-text">Połączono z serwerem</span>
+                <span id="unsynced-badge" style="display: none; background: #dc3545; color: white; padding: 2px 8px; border-radius: 20px; font-size: 0.8em; margin-left: 10px;"></span>
+            </div>
+            <button id="sync-btn" class="sync-btn" onclick="syncWithServer()">
+                <i class="fas fa-sync"></i> Synchronizuj
+            </button>
+        </div>
+
+        
+
+        <!-- Dynamic Flash Message Container -->
+        <div id="flash-message-container">
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    {% for category, message in messages %}
+                        <div class="flash-message {{ category }}">{{ message }}</div>
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
+        </div>
+
+        <!-- Leaderboard section -->
+        <div class="card global-winner-section" id="global-winner-card">
+            {% if global_winner %}
+                {% if global_winner == "Remis" %}
+                    <h2><i class="fas fa-handshake"></i> Całkowity Remis!</h2>
+                    <p>Obaj mają po <strong>{{ global_total_steps[users_inv["Weronika"]] }}</strong> kroków!</p>
+                {% else %}
+                    <h2><i class="fas fa-trophy"></i> Lider Wyścigu: <span class="winner-name">{{ global_winner }}</span>!</h2>
+                    <p>Ma o <strong>{{ global_diff }}</strong> kroków więcej w sumie!</p>
+                {% endif %}
+            {% else %}
+                <h2>Brak danych do wyznaczenia lidera. Zacznijcie wpisywać kroki!</h2>
+            {% endif %}
+        </div>
+
+        <!-- Form section -->
+        <div class="card form-section">
+            <h2><i class="fas fa-shoe-prints"></i> Wprowadź Kroki Dnia <i class="fas fa-mug-hot"></i></h2>
+            <form id="steps-form" method="POST">
+                <label for="log_date">Data wpisu:</label>
+                <input type="date" id="log_date" name="log_date" value="{{ default_date }}" required>
+
+                {% for user_id, user_name in users.items() %}
+                    <label for="step_count_{{ user_id }}">{{ user_name }} (kroki):</label>
+                    <input type="number" id="step_count_{{ user_id }}" name="step_count_{{ user_id }}" min="0" value="{{ current_form_data[user_id] if current_form_data[user_id] is not none else '' }}">
+                {% endfor %}
+                
+                <button type="submit">Zapisz Kroki!</button>
+            </form>
+        </div>
+
+        <!-- Comparison section -->
+        <div class="card comparison-section">
+            <h2><i class="fas fa-chart-bar"></i> Porównanie Dziennych Postępów</h2>
+            <div class="comparison-grid" id="comparison-grid">
+                {% for user_data in comparison_data %}
+                <div class="comparison-item">
+                    <h3>{{ user_data.name }}</h3>
+                    <p>Ostatni wpis ({{ user_data.latest_date }}): <strong>{{ user_data.latest_steps }}</strong> kroków</p>
+                    <div class="progress-bar-container">
+                        <div class="progress-bar {{ user_data.progress_color }}" style="width:{{ user_data.percentage if user_data.percentage <= 100 else 100 }}%;">
+                            <span class="progress-text">{{ user_data.percentage | int if user_data.percentage <= 100 else 100 }}%</span>
+                        </div>
+                    </div>
+                    {% if user_data.percentage > 100 %}
+                        <p class="limit-exceeded"><i class="fas fa-exclamation-triangle"></i> Limit {{ daily_limit }} przekroczony!</p>
+                    {% endif %}
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+
+        <!-- Last day summary section -->
+        <div class="card last-day-summary-section" id="last-day-summary-card" {% if not last_day_summary %}style="display: none;"{% endif %}>
+            <div id="last-day-summary-content">
+                {% if last_day_summary %}
+                <h2><i class="fas fa-calendar-day"></i> Wyniki z {{ last_day_summary.date.strftime('%d.%m.%Y') }} <span class="date-weekday">({{ last_day_summary.date_weekday }})</span></h2>
+                {% if last_day_summary.winner == "Remis" %}
+                    <p class="last-day-draw">W tym dniu był remis! Po ile kroków?</p>
+                {% else %}
+                    <p class="last-day-winner-info">
+                        Zwycięzca dnia: <span class="winner-name">{{ last_day_summary.winner }}</span>!
+                        Zrobił(a) o <span class="diff-steps">{{ last_day_summary.diff }}</span> kroków więcej.
+                    </p>
+                {% endif %}
+                <ul>
+                    {% for entry in last_day_summary.entries %}
+                        <li><strong>{{ entry.name }}</strong>: {{ entry.step_count }} kroków</li>
+                    {% endfor %}
+                </ul>
+                {% endif %}
+            </div>
+        </div>
+
+        <!-- History section -->
+        <div class="card history-section">
+            <h2><i class="fas fa-book-open"></i> Kronika Kroków & Kawy</h2>
+            <div id="history-container">
+                {% if full_history %}
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Data</th>
+                                <th>Weronika</th>
+                                <th>Michał</th>
+                            </tr>
+                        </thead>
+                        <tbody id="history-table-body">
+                            {% for entry in full_history %}
+                            <tr>
+                                <td>{{ entry.date.strftime('%d.%m.%Y') }} <span class="date-weekday">({{ entry.date_weekday }})</span></td>
+                                <td class="{% if entry.winner_day == 'Weronika' %}bold-winner{% endif %}">{{ entry.Weronika }} <i class="fas fa-shoe-prints"></i></td>
+                                <td class="{% if entry.winner_day == 'Mich' %}bold-winner{% endif %}">{{ entry.Mich }} <i class="fas fa-shoe-prints"></i></td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                {% else %}
+                    <p class="no-data">Brak historycznych wpisów. Zapisz pierwsze kroki!</p>
+                {% endif %}
+            </div>
+        </div>
+
+        <!-- Chart section (moved to bottom) -->
+        <div class="card">
+            <h2 style="font-size:2.2em;letter-spacing:2px;display:flex;align-items:center;justify-content:center;gap:10px;">
+                <i class="fas fa-chart-line"></i> KROKI DZIENNE I SUMA NARASTAJĄCO
+            </h2>
+            <canvas id="stepsChart" height="120"></canvas>
+        </div>
+
+        <footer>
+            <p><i class="fas fa-coffee"></i> Powered by KawowaChmurka <i class="fas fa-walking"></i></p>
+            <p>&copy; 2026</p>
+        </footer>
+    </div>
+    <script>
+    // Register service worker (PWA core)
+    if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+            navigator.serviceWorker.register('/sw.js')
+                .then(reg => console.log('SW registered', reg.scope))
+                .catch(err => console.error('SW registration failed', err));
+        });
+    }
+
+    // Simple offline indicator
+    function updateOnlineStatus() {
+        if (!navigator.onLine) {
+            document.body.insertAdjacentHTML('afterbegin', '<div style="background:#f8d7da;padding:10px;text-align:center;font-weight:600">Tryb offline</div>');
+        }
+    }
+    window.addEventListener('load', updateOnlineStatus);
+    window.addEventListener('offline', updateOnlineStatus);
+    
+    // PWA install prompt
+    let deferredPrompt;
+
+    window.addEventListener('beforeinstallprompt', (e) => {
+        e.preventDefault();
+        deferredPrompt = e;
+        document.getElementById('install-btn').style.display = 'block';
+    });
+
+    document.getElementById('install-btn').addEventListener('click', async () => {
+        if (!deferredPrompt) return;
+        deferredPrompt.prompt();
+        await deferredPrompt.userChoice;
+        deferredPrompt = null;
+        document.getElementById('install-btn').style.display = 'none';
+    });
+
+    </script>
+
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <script>
+        function buildChart(data) {
+            const labels = data.map(d => {
+                // format to DD.MM
+                const date = new Date(d.date);
+                const day = String(date.getDate()).padStart(2,'0');
+                const month = String(date.getMonth()+1).padStart(2,'0');
+                return `${day}.${month}`;
+            });
+
+            const wDaily = data.map(d => d.Weronika || 0);
+            const mDaily = data.map(d => d.Mich || 0);
+
+            let wSum = 0, mSum = 0;
+            const wCum = [];
+            const mCum = [];
+
+            data.forEach(d => {
+                wSum += (d.Weronika || 0);
+                mSum += (d.Mich || 0);
+                wCum.push(wSum);
+                mCum.push(mSum);
+            });
+
+            const ctx = document.getElementById('stepsChart');
+
+            new Chart(ctx, {
+                data: {
+                    labels,
+                    datasets: [
+                        {
+                            type: 'bar',
+                            label: 'Weronika (dziennie)',
+                            data: wDaily,
+                            backgroundColor: '#6b4f3a',
+                            borderRadius: 6
+                        },
+                        {
+                            type: 'bar',
+                            label: 'Mich (dziennie)',
+                            data: mDaily,
+                            backgroundColor: '#b08d2c',
+                            borderRadius: 6
+                        },
+                        {
+                            type: 'line',
+                            label: 'Weronika (narastająco)',
+                            data: wCum,
+                            borderColor: '#2a9d8f',
+                            backgroundColor: '#2a9d8f',
+                            pointBackgroundColor: '#2a9d8f',
+                            pointBorderColor: '#ffffff',
+                            pointBorderWidth: 3,
+                            pointRadius: 5,
+                            tension: 0.4,
+                            yAxisID: 'y1'
+                        },
+                        {
+                            type: 'line',
+                            label: 'Mich (narastająco)',
+                            data: mCum,
+                            borderColor: '#e76f51',
+                            backgroundColor: '#e76f51',
+                            pointBackgroundColor: '#e76f51',
+                            pointBorderColor: '#ffffff',
+                            pointBorderWidth: 3,
+                            pointRadius: 5,
+                            tension: 0.4,
+                            yAxisID: 'y1'
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    layout: {
+                        padding: {
+                            top: 10,
+                            bottom: 0
+                        }
+                    },
+                    interaction: { mode: 'index', intersect: false },
+                    plugins: {
+                        legend: {
+                            position: 'bottom',
+                            labels: {
+                                usePointStyle: true,
+                                boxWidth: 12
+                            }
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            title: { display: true, text: 'Kroki dziennie' },
+                            grid: {
+                                color: 'rgba(0,0,0,0.1)'
+                            },
+                            ticks: {
+                                padding: 4
+                            }
+                        },
+                        y1: {
+                            beginAtZero: true,
+                            position: 'right',
+                            grid: { drawOnChartArea: false },
+                            title: { display: true, text: 'Suma narastająco' }
+                        }
+                    }
+                }
+            });
+        }
+
+        // hook into existing data render
+        window.addEventListener('DOMContentLoaded', () => {
+            try {
+                const historyData = {{ full_history | tojson }};
+                buildChart(historyData.reverse());
+            } catch (e) {
+                console.error('Chart init failed', e);
+            }
+        });
+    </script>
+
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <script>
+    // --- OFFLINE SYNC ---
+    const STORAGE_KEY = 'unsynced_steps';
+
+    function saveOffline(entry) {
+        const data = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
+        const key = entry.user_id + '_' + entry.log_date;
+        const map = Object.fromEntries(data.map(e => [e.user_id + '_' + e.log_date, e]));
+        map[key] = {...entry, updated_at: Date.now()};
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(Object.values(map)));
+    }
+
+    async function syncData() {
+        const data = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
+        if (!data.length) return;
+
+        try {
+            await fetch('/api/sync', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ unsynced_entries: data })
+            });
+            localStorage.removeItem(STORAGE_KEY);
+            console.log('Synced offline data');
+        } catch (e) {
+            console.warn('Sync failed, will retry later');
+        }
+    }
+
+    window.addEventListener('online', syncData);
+
+    // Hook form submit
+    document.addEventListener('DOMContentLoaded', () => {
+        const form = document.querySelector('form');
+        if (!form) return;
+
+        form.addEventListener('submit', (e) => {
+            if (!navigator.onLine) {
+                e.preventDefault();
+
+                const formData = new FormData(form);
+                const log_date = formData.get('log_date');
+
+                formData.forEach((value, key) => {
+                    if (key.startsWith('step_count_') && value) {
+                        const user_id = key.split('_')[2];
+                        saveOffline({ user_id, log_date, step_count: value });
+                    }
+                });
+
+                alert('Zapisano offline. Dane zsynchronizują się po powrocie internetu.');
+            }
+        });
+
+        syncData();
+    });
+
+    // old chart removed
+    </script>
+    <script>
+        const USERS = {
+            1: "Weronika",
+            2: "Mich"
+        };
+        const DAILY_LIMIT = 11000;
+
+        // --- Service Worker Registration ---
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('/sw.js')
+                    .then(reg => console.log('Service Worker registered successfully:', reg))
+                    .catch(err => console.error('Service Worker registration failed:', err));
+            });
+        }
+
+        // --- IndexedDB Setup ---
+        let db;
+        const dbName = 'steps_db';
+        const dbVersion = 1;
+
+        function initIndexedDB() {
+            return new Promise((resolve, reject) => {
+                const request = indexedDB.open(dbName, dbVersion);
+                
+                request.onupgradeneeded = function(e) {
+                    const db = e.target.result;
+                    if (!db.objectStoreNames.contains('daily_steps')) {
+                        const store = db.createObjectStore('daily_steps', { keyPath: 'id' });
+                        store.createIndex('synced', 'synced', { unique: false });
+                        store.createIndex('log_date', 'log_date', { unique: false });
+                    }
+                };
+                
+                request.onsuccess = function(e) {
+                    db = e.target.result;
+                    resolve(db);
+                };
+                
+                request.onerror = function(e) {
+                    console.error('IndexedDB open error:', e);
+                    reject(e);
+                };
+            });
+        }
+
+        // --- DB Helpers ---
+        function saveStepLocally(userId, logDate, stepCount, synced = 0) {
+            return new Promise((resolve, reject) => {
+                const tx = db.transaction('daily_steps', 'readwrite');
+                const store = tx.objectStore('daily_steps');
+                const id = `${userId}_${logDate}`;
+                
+                // Cap step count at limit
+                let count = parseInt(stepCount);
+                if (count > DAILY_LIMIT) count = DAILY_LIMIT;
+                if (count < 0) count = 0;
+
+                const record = {
+                    id: id,
+                    user_id: parseInt(userId),
+                    log_date: logDate,
+                    step_count: count,
+                    synced: synced
+                };
+                const request = store.put(record);
+                
+                request.onsuccess = () => resolve();
+                request.onerror = (e) => reject(e);
+            });
+        }
+
+        function getUnsyncedSteps() {
+            return new Promise((resolve, reject) => {
+                const tx = db.transaction('daily_steps', 'readonly');
+                const store = tx.objectStore('daily_steps');
+                const index = store.index('synced');
+                const request = index.getAll(IDBKeyRange.only(0));
+                
+                request.onsuccess = (e) => resolve(e.target.result);
+                request.onerror = (e) => reject(e);
+            });
+        }
+
+        function markStepsAsSynced(entries) {
+            return new Promise((resolve, reject) => {
+                const tx = db.transaction('daily_steps', 'readwrite');
+                const store = tx.objectStore('daily_steps');
+                
+                entries.forEach(entry => {
+                    entry.synced = 1;
+                    store.put(entry);
+                });
+                
+                tx.oncomplete = () => resolve();
+                tx.onerror = (e) => reject(e);
+            });
+        }
+
+        function saveAllServerSteps(historyList) {
+            return new Promise((resolve, reject) => {
+                const tx = db.transaction('daily_steps', 'readwrite');
+                const store = tx.objectStore('daily_steps');
+                
+                historyList.forEach(day => {
+                    const dateStr = day.date; // 'YYYY-MM-DD'
+                    if (day.Weronika !== undefined && day.Weronika > 0) {
+                        const id = `1_${dateStr}`;
+                        store.put({ id: id, user_id: 1, log_date: dateStr, step_count: day.Weronika, synced: 1 });
+                    }
+                    if (day.Mich !== undefined && day.Mich > 0) {
+                        const id = `2_${dateStr}`;
+                        store.put({ id: id, user_id: 2, log_date: dateStr, step_count: day.Mich, synced: 1 });
+                    }
+                });
+                
+                tx.oncomplete = () => resolve();
+                tx.onerror = (e) => reject(e);
+            });
+        }
+
+        function getAllLocalSteps() {
+            return new Promise((resolve, reject) => {
+                const tx = db.transaction('daily_steps', 'readonly');
+                const store = tx.objectStore('daily_steps');
+                const request = store.getAll();
+                request.onsuccess = (e) => resolve(e.target.result);
+                request.onerror = (e) => reject(e);
+            });
+        }
+
+        function getDayOfWeekName(dateStr) {
+            const dateParts = dateStr.split('-');
+            const dt = new Date(dateParts[0], dateParts[1] - 1, dateParts[2]);
+            const weekdays = ["Niedziela", "Poniedziałek", "Wtorek", "Środa", "Czwartek", "Piątek", "Sobota"];
+            return weekdays[dt.getDay()];
+        }
+
+        // --- Render UI from Local Database ---
+        async function renderFromLocalDB() {
+            const allRecords = await getAllLocalSteps();
+            
+            // Group by date
+            const dateGroups = {};
+            allRecords.forEach(rec => {
+                if (!dateGroups[rec.log_date]) {
+                    dateGroups[rec.log_date] = { date: rec.log_date };
+                }
+                if (rec.user_id === 1) {
+                    dateGroups[rec.log_date].Weronika = rec.step_count;
+                } else if (rec.user_id === 2) {
+                    dateGroups[rec.log_date].Mich = rec.step_count;
+                }
+            });
+            
+            // Sort dates descending
+            const sortedDates = Object.keys(dateGroups).sort().reverse();
+            
+            // 1. Full History List
+            const fullHistory = sortedDates.map(dateStr => {
+                const g = dateGroups[dateStr];
+                const wSteps = g.Weronika || 0;
+                const mSteps = g.Mich || 0;
+                let winner_day = null;
+                if (wSteps > mSteps) winner_day = 'Weronika';
+                else if (mSteps > wSteps) winner_day = 'Mich';
+                
+                return {
+                    date: dateStr,
+                    date_weekday: getDayOfWeekName(dateStr),
+                    Weronika: wSteps,
+                    Mich: mSteps,
+                    winner_day: winner_day
+                };
+            });
+            
+            // 2. Global Total Steps
+            let totalWeronika = 0;
+            let totalMich = 0;
+            allRecords.forEach(rec => {
+                if (rec.user_id === 1) totalWeronika += rec.step_count;
+                else if (rec.user_id === 2) totalMich += rec.step_count;
+            });
+            
+            let globalWinner = null;
+            let globalDiff = 0;
+            if (totalWeronika > totalMich) {
+                globalWinner = "Weronika";
+                globalDiff = totalWeronika - totalMich;
+            } else if (totalMich > totalWeronika) {
+                globalWinner = "Mich";
+                globalDiff = totalMich - totalWeronika;
+            } else if (totalWeronika > 0) {
+                globalWinner = "Remis";
+            }
+            
+            // 3. Comparison data (latest step count per user)
+            const latestWeronikaEntry = allRecords.filter(r => r.user_id === 1).sort((a,b) => b.log_date.localeCompare(a.log_date))[0];
+            const latestMichEntry = allRecords.filter(r => r.user_id === 2).sort((a,b) => b.log_date.localeCompare(a.log_date))[0];
+            
+            const comparisonData = [
+                {
+                    name: "Weronika",
+                    user_id: 1,
+                    latest_steps: latestWeronikaEntry ? latestWeronikaEntry.step_count : 0,
+                    latest_date: latestWeronikaEntry ? latestWeronikaEntry.log_date : 'Brak wpisu',
+                    percentage: latestWeronikaEntry ? Math.round((latestWeronikaEntry.step_count / DAILY_LIMIT) * 100 * 10) / 10 : 0,
+                    progress_color: latestWeronikaEntry ? (latestWeronikaEntry.step_count >= DAILY_LIMIT ? 'green' : (latestWeronikaEntry.step_count >= DAILY_LIMIT / 2 ? 'orange' : 'red')) : 'red'
+                },
+                {
+                    name: "Michał",
+                    user_id: 2,
+                    latest_steps: latestMichEntry ? latestMichEntry.step_count : 0,
+                    latest_date: latestMichEntry ? latestMichEntry.log_date : 'Brak wpisu',
+                    percentage: latestMichEntry ? Math.round((latestMichEntry.step_count / DAILY_LIMIT) * 100 * 10) / 10 : 0,
+                    progress_color: latestMichEntry ? (latestMichEntry.step_count >= DAILY_LIMIT ? 'green' : (latestMichEntry.step_count >= DAILY_LIMIT / 2 ? 'orange' : 'red')) : 'red'
+                }
+            ];
+            
+            // 4. Last day summary
+            let lastDaySummary = null;
+            if (sortedDates.length > 0) {
+                const lastDate = sortedDates[0];
+                const g = dateGroups[lastDate];
+                const wSteps = g.Weronika || 0;
+                const mSteps = g.Mich || 0;
+                
+                if (g.Weronika !== undefined && g.Mich !== undefined) {
+                    let winner = null;
+                    let diff = 0;
+                    if (wSteps > mSteps) {
+                        winner = "Weronika";
+                        diff = wSteps - mSteps;
+                    } else if (mSteps > wSteps) {
+                        winner = "Mich";
+                        diff = mSteps - wSteps;
+                    } else {
+                        winner = "Remis";
+                    }
+                    
+                    const parts = lastDate.split('-');
+                    const displayDate = `${parts[2]}.${parts[1]}.${parts[0]}`;
+                    
+                    lastDaySummary = {
+                        date_str: displayDate,
+                        date_weekday: getDayOfWeekName(lastDate),
+                        winner: winner,
+                        diff: diff,
+                        entries: [
+                            { name: "Weronika", step_count: wSteps },
+                            { name: "Michał", step_count: mSteps }
+                        ].sort((a,b) => b.step_count - a.step_count)
+                    };
+                }
+            }
+            
+            updateDOM({
+                global_winner: globalWinner,
+                global_diff: globalDiff,
+                global_total_steps: { 1: totalWeronika, 2: totalMich },
+                comparison_data: comparisonData,
+                last_day_summary: lastDaySummary,
+                full_history: fullHistory
+            });
+        }
+
+        // --- DOM Rendering ---
+        function updateDOM(data) {
+            // 1. Leaderboard
+            const globalWinnerCard = document.getElementById('global-winner-card');
+            if (data.global_winner) {
+                if (data.global_winner === "Remis") {
+                    globalWinnerCard.innerHTML = `
+                        <h2><i class="fas fa-handshake"></i> Całkowity Remis!</h2>
+                        <p>Obaj mają po <strong>${data.global_total_steps[1]}</strong> kroków!</p>
+                    `;
+                } else {
+                    globalWinnerCard.innerHTML = `
+                        <h2><i class="fas fa-trophy"></i> Lider Wyścigu: <span class="winner-name">${data.global_winner}</span>!</h2>
+                        <p>Ma o <strong>${data.global_diff}</strong> kroków więcej w sumie!</p>
+                    `;
+                }
+            } else {
+                globalWinnerCard.innerHTML = `
+                    <h2>Brak danych do wyznaczenia lidera. Zacznijcie wpisywać kroki!</h2>
+                `;
+            }
+
+            // 2. Comparison Bars
+            const comparisonGrid = document.getElementById('comparison-grid');
+            comparisonGrid.innerHTML = '';
+            data.comparison_data.forEach(user => {
+                const percentageDisplay = user.percentage > 100 ? 100 : user.percentage;
+                
+                let limitWarning = '';
+                if (user.percentage >= 100) {
+                    limitWarning = `<p class="limit-exceeded"><i class="fas fa-exclamation-triangle"></i> Limit ${DAILY_LIMIT} osiągnięty!</p>`;
+                }
+                
+                let dateStr = user.latest_date;
+                if (dateStr && dateStr.includes('-')) {
+                    const parts = dateStr.split('-');
+                    dateStr = `${parts[2]}.${parts[1]}.${parts[0]}`;
+                }
+                
+                comparisonGrid.innerHTML += `
+                    <div class="comparison-item">
+                        <h3>${user.name}</h3>
+                        <p>Ostatni wpis (${dateStr}): <strong>${user.latest_steps}</strong> kroków</p>
+                        <div class="progress-bar-container">
+                            <div class="progress-bar ${user.progress_color}" style="width:${percentageDisplay}%;">
+                                <span class="progress-text">${Math.round(user.percentage)}%</span>
+                            </div>
+                        </div>
+                        ${limitWarning}
+                    </div>
+                `;
+            });
+
+            // 3. Last Day Summary
+            const lastDayCard = document.getElementById('last-day-summary-card');
+            const lastDayContent = document.getElementById('last-day-summary-content');
+            if (data.last_day_summary) {
+                lastDayCard.style.display = 'block';
+                let winnerText = '';
+                if (data.last_day_summary.winner === "Remis") {
+                    winnerText = `<p class="last-day-draw">W tym dniu był remis!</p>`;
+                } else {
+                    winnerText = `
+                        <p class="last-day-winner-info">
+                            Zwycięzca dnia: <span class="winner-name">${data.last_day_summary.winner}</span>!
+                            Zrobił(a) o <span class="diff-steps">${data.last_day_summary.diff}</span> kroków więcej.
+                        </p>
+                    `;
+                }
+                
+                let entriesList = '';
+                data.last_day_summary.entries.forEach(e => {
+                    entriesList += `<li><strong>${e.name}</strong>: ${e.step_count} kroków</li>`;
+                });
+                
+                lastDayContent.innerHTML = `
+                    <h2><i class="fas fa-calendar-day"></i> Wyniki z ${data.last_day_summary.date_str} <span class="date-weekday">(${data.last_day_summary.date_weekday})</span></h2>
+                    ${winnerText}
+                    <ul>
+                        ${entriesList}
+                    </ul>
+                `;
+            } else {
+                lastDayCard.style.display = 'none';
+            }
+
+            // 4. History Table
+            const historyContainer = document.getElementById('history-container');
+            if (data.full_history && data.full_history.length > 0) {
+                let tableRows = '';
+                data.full_history.forEach(entry => {
+                    const parts = entry.date.split('-');
+                    const displayDate = `${parts[2]}.${parts[1]}.${parts[0]}`;
+                    
+                    const wBoldClass = entry.winner_day === 'Weronika' ? 'bold-winner' : '';
+                    const mBoldClass = entry.winner_day === 'Mich' ? 'bold-winner' : '';
+                    
+                    tableRows += `
+                        <tr>
+                            <td>${displayDate} <span class="date-weekday">(${entry.date_weekday})</span></td>
+                            <td class="${wBoldClass}">${entry.Weronika} <i class="fas fa-shoe-prints"></i></td>
+                            <td class="${mBoldClass}">${entry.Mich} <i class="fas fa-shoe-prints"></i></td>
+                        </tr>
+                    `;
+                });
+                
+                historyContainer.innerHTML = `
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Data</th>
+                                <th>Weronika</th>
+                                <th>Michał</th>
+                            </tr>
+                        </thead>
+                        <tbody id="history-table-body">
+                            ${tableRows}
+                        </tbody>
+                    </table>
+                `;
+            } else {
+                historyContainer.innerHTML = `
+                    <p class="no-data">Brak historycznych wpisów. Zapisz pierwsze kroki!</p>
+                `;
+            }
+        }
+
+        // --- Banner and Toast Notification Helpers ---
+        function showStatusBanner(isOnline) {
+            const banner = document.getElementById('sync-banner');
+            const icon = document.getElementById('sync-icon');
+            const text = document.getElementById('sync-status-text');
+            
+            if (isOnline) {
+                banner.className = 'sync-banner online';
+                icon.className = 'fas fa-wifi';
+                text.textContent = 'Połączono z serwerem';
+            } else {
+                banner.className = 'sync-banner offline';
+                icon.className = 'fas fa-wifi-slash';
+                text.textContent = 'Tryb offline (dane zapisywane lokalnie)';
+            }
+        }
+
+        async function updateUnsyncedCount() {
+            const unsynced = await getUnsyncedSteps();
+            const badge = document.getElementById('unsynced-badge');
+            if (unsynced.length > 0) {
+                badge.style.display = 'inline-block';
+                badge.textContent = `${unsynced.length} nieprzesłanych`;
+            } else {
+                badge.style.display = 'none';
+            }
+        }
+
+        function updateSyncButtonState(syncing) {
+            const btn = document.getElementById('sync-btn');
+            if (syncing) {
+                btn.disabled = true;
+                btn.innerHTML = `<i class="fas fa-sync fa-spin-custom"></i> Synchronizacja...`;
+            } else {
+                btn.disabled = false;
+                btn.innerHTML = `<i class="fas fa-sync"></i> Synchronizuj`;
+            }
+        }
+
+        function showFlashMessage(message, category) {
+            const container = document.getElementById('flash-message-container');
+            const msgDiv = document.createElement('div');
+            msgDiv.className = `flash-message ${category}`;
+            msgDiv.textContent = message;
+            
+            container.appendChild(msgDiv);
+            setTimeout(() => {
+                msgDiv.style.opacity = '0';
+                setTimeout(() => msgDiv.remove(), 1000);
+            }, 5000);
+        }
+
+        async function updateDefaultDate() {
+            const allRecords = await getAllLocalSteps();
+            const todayStr = new Date().toISOString().split('T')[0];
+            
+            const loggedToday = allRecords.filter(r => r.log_date === todayStr);
+            const logDateInput = document.getElementById('log_date');
+            
+            if (loggedToday.length >= 2) {
+                const tomorrow = new Date();
+                tomorrow.setDate(tomorrow.getDate() + 1);
+                logDateInput.value = tomorrow.toISOString().split('T')[0];
+            } else {
+                logDateInput.value = todayStr;
+            }
+        }
+
+        // --- Synchronization Engine ---
+        let isSyncing = false;
+
+        async function syncWithServer() {
+            if (isSyncing) return;
+            if (!navigator.onLine) {
+                showStatusBanner(false);
+                return;
+            }
+            
+            isSyncing = true;
+            updateSyncButtonState(true);
+            
+            try {
+                const unsynced = await getUnsyncedSteps();
+                let responseData;
+                
+                if (unsynced.length > 0) {
+                    console.log('Syncing unsynced steps to server:', unsynced);
+                    const response = await fetch('/api/sync', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({ unsynced_entries: unsynced })
+                    });
+                    if (!response.ok) throw new Error('Sync post failed');
+                    responseData = await response.json();
+                    
+                    // Mark those entries as synced locally
+                    await markStepsAsSynced(unsynced);
+                } else {
+                    const response = await fetch('/api/data');
+                    if (!response.ok) throw new Error('Fetch data failed');
+                    responseData = await response.json();
+                }
+                
+                // Align IndexedDB with server database state
+                await saveAllServerSteps(responseData.full_history);
+                showFlashMessage('Zsynchronizowano pomyślnie z serwerem!', 'success');
+                
+                // Re-render UI from fresh SQLite data
+                await renderFromLocalDB();
+                
+            } catch (err) {
+                console.error('Synchronization failed:', err);
+                showFlashMessage('Błąd synchronizacji. Spróbuj ponownie później.', 'error');
+            } finally {
+                isSyncing = false;
+                updateSyncButtonState(false);
+                await updateUnsyncedCount();
+            }
+        }
+
+        // --- Event Listeners ---
+        window.addEventListener('online', () => {
+            showStatusBanner(true);
+            syncWithServer();
+        });
+        window.addEventListener('offline', () => {
+            showStatusBanner(false);
+        });
+
+        // Form Submit Interception
+        const form = document.getElementById('steps-form');
+        form.addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const logDate = document.getElementById('log_date').value;
+            const wStepsVal = document.getElementById('step_count_1').value.trim();
+            const mStepsVal = document.getElementById('step_count_2').value.trim();
+            
+            if (!wStepsVal && !mStepsVal) {
+                showFlashMessage("Wprowadź kroki dla co najmniej jednego użytkownika.", "error");
+                return;
+            }
+            
+            try {
+                if (wStepsVal) {
+                    await saveStepLocally(1, logDate, wStepsVal, 0);
+                }
+                if (mStepsVal) {
+                    await saveStepLocally(2, logDate, mStepsVal, 0);
+                }
+                
+                showFlashMessage("Kroki zostały zapisane lokalnie!", "success");
+                
+                // Re-render UI and default date
+                await renderFromLocalDB();
+                await updateUnsyncedCount();
+                await updateDefaultDate();
+                
+                // Clear input values
+                document.getElementById('step_count_1').value = '';
+                document.getElementById('step_count_2').value = '';
+                
+                // Auto-sync if online
+                if (navigator.onLine) {
+                    syncWithServer();
+                }
+            } catch (err) {
+                console.error('Form save failed:', err);
+                showFlashMessage("Wystąpił błąd podczas zapisywania.", "error");
+            }
+        });
+
+        // Initialization
+        window.addEventListener('DOMContentLoaded', async () => {
+            try {
+                await initIndexedDB();
+                
+                await updateConnectionStatus();
+                await updateUnsyncedCount();
+                
+                // Fetch server data if online, else render cached data
+                if (await checkServerConnection()) {
+                    await syncWithServer();
+                } else {
+                    await renderFromLocalDB();
+                }
+                await updateDefaultDate();
+            } catch (err) {
+                console.error('Initialization failed:', err);
+            }
+        });
+
+        // --- PWA: connection detection (home vs outside) ---
+        async function checkServerConnection() {
+            try {
+                const res = await fetch('/api/ping', { cache: 'no-store' });
+                return res.ok;
+            } catch (e) {
+                return false;
+            }
+        }
+
+        async function updateConnectionStatus() {
+            const isOnline = navigator.onLine;
+            const canReachServer = isOnline ? await checkServerConnection() : false;
+
+            if (!isOnline) {
+                showStatusBanner(false, 'Brak internetu – tryb offline');
+            } else if (!canReachServer) {
+                showStatusBanner(false, 'Poza siecią domową – tryb offline');
+            } else {
+                showStatusBanner(true, 'Połączono z serwerem domowym');
+            }
+        }
+
+        window.addEventListener('online', updateConnectionStatus);
+        window.addEventListener('offline', updateConnectionStatus);
+        setInterval(updateConnectionStatus, 10000);
+    </script>
+</body>
+</html>

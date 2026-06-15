@@ -1,0 +1,17 @@
+{
+  "name": "Szalony Challenge Kroków & Kawy",
+  "short_name": "Kroki & Kawy",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#EDE0D4",
+  "theme_color": "#4A2C2A",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "/static/icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}
