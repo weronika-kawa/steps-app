@@ -54,6 +54,92 @@
             overflow: hidden;
         }
 
+        .top-menu {
+            position: sticky;
+            top: 10px;
+            z-index: 20;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+            padding: 10px;
+            margin-bottom: 18px;
+            border-radius: 14px;
+            background: linear-gradient(90deg, var(--coffee-dark) 0%, var(--coffee-medium) 100%);
+            box-shadow: 0 10px 24px rgba(74, 44, 42, 0.25);
+            border: 1px solid rgba(237, 224, 212, 0.35);
+        }
+
+        .top-menu a {
+            font-family: 'Bebas Neue', sans-serif;
+            letter-spacing: 1px;
+            font-size: 1.2em;
+            text-decoration: none;
+            color: var(--accent-milk);
+            padding: 8px 14px;
+            border-radius: 999px;
+            transition: background-color 0.2s ease, transform 0.2s ease;
+        }
+
+        .top-menu a:hover {
+            background: rgba(237, 224, 212, 0.2);
+            transform: translateY(-1px);
+        }
+
+        .top-menu a.active {
+            background: rgba(237, 224, 212, 0.3);
+            box-shadow: inset 0 0 0 1px rgba(237, 224, 212, 0.45);
+        }
+
+        .install-btn {
+            display: none;
+            margin-bottom: 15px;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 8px;
+            background: var(--coffee-dark);
+            color: #fff;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .unsynced-badge {
+            display: none;
+            background: #dc3545;
+            color: #fff;
+            padding: 2px 8px;
+            border-radius: 20px;
+            font-size: 0.8em;
+            margin-left: 10px;
+        }
+
+        .chart-title {
+            font-size: 2.2em;
+            letter-spacing: 2px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .settings-note {
+            text-align: center;
+            margin: 0;
+            color: var(--coffee-medium);
+            font-weight: 600;
+        }
+
+        .offline-banner {
+            background: #f8d7da;
+            padding: 10px;
+            text-align: center;
+            font-weight: 600;
+        }
+
+        .tab-hidden {
+            display: none !important;
+        }
+
         .coffee-stain {
             position: absolute;
             width: 150px;
@@ -481,7 +567,7 @@
 </head>
 <body>
     <div class="container">
-        <button id="install-btn" style="display:none;margin-bottom:15px;padding:10px 15px;border:none;border-radius:8px;background:#4A2C2A;color:white;font-weight:600;cursor:pointer;">Zainstaluj aplikację</button>
+        <button id="install-btn" class="install-btn">Zainstaluj aplikację</button>
         <!-- Users management removed: fixed users Weronika & Mich -->
         <!-- Kawowe plamy jako tło -->
         <div class="coffee-stain stain-top-left"></div>
@@ -489,12 +575,18 @@
 
         <h1>Szalony Challenge <br><small>Kto zrobi więcej kroków do końca czerwca?</small></h1>
 
+        <nav class="top-menu" aria-label="Menu glowne">
+            <a href="#" data-view="add">Dodaj kroki</a>
+            <a href="#" data-view="results">Wyniki</a>
+            <a href="#" data-view="settings">Ustawienia</a>
+        </nav>
+
         <!-- PWA Sync Status Banner -->
         <div id="sync-banner" class="sync-banner online">
             <div class="sync-info">
                 <i id="sync-icon" class="fas fa-wifi"></i>
                 <span id="sync-status-text">Połączono z serwerem</span>
-                <span id="unsynced-badge" style="display: none; background: #dc3545; color: white; padding: 2px 8px; border-radius: 20px; font-size: 0.8em; margin-left: 10px;"></span>
+                <span id="unsynced-badge" class="unsynced-badge"></span>
             </div>
             <button id="sync-btn" class="sync-btn" onclick="syncWithServer()">
                 <i class="fas fa-sync"></i> Synchronizuj
@@ -515,7 +607,7 @@
         </div>
 
         <!-- Leaderboard section -->
-        <div class="card global-winner-section" id="global-winner-card">
+        <div class="card global-winner-section content-view" id="global-winner-card" data-view="results">
             {% if global_winner %}
                 {% if global_winner == "Remis" %}
                     <h2><i class="fas fa-handshake"></i> Całkowity Remis!</h2>
@@ -530,7 +622,7 @@
         </div>
 
         <!-- Form section -->
-        <div class="card form-section">
+        <div id="add" class="card form-section content-view" data-view="add">
             <h2><i class="fas fa-shoe-prints"></i> Wprowadź Kroki Dnia <i class="fas fa-mug-hot"></i></h2>
             <form id="steps-form" method="POST">
                 <label for="log_date">Data wpisu:</label>
@@ -546,7 +638,7 @@
         </div>
 
         <!-- Comparison section -->
-        <div class="card comparison-section">
+        <div id="results" class="card comparison-section content-view" data-view="results">
             <h2><i class="fas fa-chart-bar"></i> Porównanie Dziennych Postępów</h2>
             <div class="comparison-grid" id="comparison-grid">
                 {% for user_data in comparison_data %}
@@ -567,7 +659,7 @@
         </div>
 
         <!-- Last day summary section -->
-        <div class="card last-day-summary-section" id="last-day-summary-card" {% if not last_day_summary %}style="display: none;"{% endif %}>
+        <div class="card last-day-summary-section content-view" id="last-day-summary-card" data-view="results" {% if not last_day_summary %}style="display: none;"{% endif %}>
             <div id="last-day-summary-content">
                 {% if last_day_summary %}
                 <h2><i class="fas fa-calendar-day"></i> Wyniki z {{ last_day_summary.date.strftime('%d.%m.%Y') }} <span class="date-weekday">({{ last_day_summary.date_weekday }})</span></h2>
@@ -589,7 +681,7 @@
         </div>
 
         <!-- History section -->
-        <div class="card history-section">
+        <div class="card history-section content-view" data-view="results">
             <h2><i class="fas fa-book-open"></i> Kronika Kroków & Kawy</h2>
             <div id="history-container">
                 {% if full_history %}
@@ -618,11 +710,18 @@
         </div>
 
         <!-- Chart section (moved to bottom) -->
-        <div class="card">
-            <h2 style="font-size:2.2em;letter-spacing:2px;display:flex;align-items:center;justify-content:center;gap:10px;">
+        <div id="results-chart" class="card content-view" data-view="results">
+            <h2 class="chart-title">
                 <i class="fas fa-chart-line"></i> KROKI DZIENNE I SUMA NARASTAJĄCO
             </h2>
             <canvas id="stepsChart" height="120"></canvas>
+        </div>
+
+        <div id="settings" class="card content-view" data-view="settings">
+            <h2><i class="fas fa-sliders-h"></i> Ustawienia</h2>
+            <p class="settings-note">
+                Tutaj dodamy ustawienia challange'u. Aktualnie możesz korzystać z dodawania krokow i wynikow.
+            </p>
         </div>
 
         <footer>
@@ -633,7 +732,16 @@
     <script>
     // Register service worker (PWA core)
     if ('serviceWorker' in navigator) {
-        window.addEventListener('load', () => {
+        window.addEventListener('load', async () => {
+            const isLocalhost = ['localhost', '127.0.0.1'].includes(window.location.hostname);
+
+            if (isLocalhost) {
+                // Avoid stale cached HTML/CSS during local development.
+                const regs = await navigator.serviceWorker.getRegistrations();
+                await Promise.all(regs.map(reg => reg.unregister()));
+                return;
+            }
+
             navigator.serviceWorker.register('/sw.js')
                 .then(reg => console.log('SW registered', reg.scope))
                 .catch(err => console.error('SW registration failed', err));
@@ -643,7 +751,19 @@
     // Simple offline indicator
     function updateOnlineStatus() {
         if (!navigator.onLine) {
-            document.body.insertAdjacentHTML('afterbegin', '<div style="background:#f8d7da;padding:10px;text-align:center;font-weight:600">Tryb offline</div>');
+            if (document.getElementById('offline-banner')) {
+                return;
+            }
+            const banner = document.createElement('div');
+            banner.id = 'offline-banner';
+            banner.className = 'offline-banner';
+            banner.textContent = 'Tryb offline';
+            document.body.insertAdjacentElement('afterbegin', banner);
+        } else {
+            const banner = document.getElementById('offline-banner');
+            if (banner) {
+                banner.remove();
+            }
         }
     }
     window.addEventListener('load', updateOnlineStatus);
@@ -666,6 +786,35 @@
         document.getElementById('install-btn').style.display = 'none';
     });
 
+    </script>
+
+    <script>
+        const DEFAULT_VIEW = 'results';
+
+        function switchView(viewName) {
+            document.querySelectorAll('.content-view[data-view]').forEach((section) => {
+                const shouldShow = section.getAttribute('data-view') === viewName;
+                section.classList.toggle('tab-hidden', !shouldShow);
+            });
+
+            document.querySelectorAll('.top-menu a[data-view]').forEach((link) => {
+                const isActive = link.getAttribute('data-view') === viewName;
+                link.classList.toggle('active', isActive);
+            });
+        }
+
+        function initTopMenuTabs() {
+            document.querySelectorAll('.top-menu a[data-view]').forEach((link) => {
+                link.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    switchView(link.getAttribute('data-view'));
+                });
+            });
+
+            switchView(DEFAULT_VIEW);
+        }
+
+        window.addEventListener('DOMContentLoaded', initTopMenuTabs);
     </script>
 
     <!-- Chart.js -->

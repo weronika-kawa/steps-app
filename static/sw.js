@@ -1,4 +1,4 @@
-const CACHE_NAME = 'steps-app-cache-v2';
+const CACHE_NAME = 'steps-app-cache-v3';
 const ASSETS_TO_CACHE = [
   '/',
   '/manifest.json',
@@ -42,6 +42,10 @@ self.addEventListener('activate', (event) => {
 
 // Fetch Event
 self.addEventListener('fetch', (event) => {
+  if (event.request.method !== 'GET') {
+    return;
+  }
+
   const url = new URL(event.request.url);
   
   // Skip API requests - let the frontend handle them directly
@@ -53,7 +57,7 @@ self.addEventListener('fetch', (event) => {
   event.respondWith(
     fetch(event.request)
       .then((response) => {
-        if (response && response.status === 200) {
+        if (response && response.status === 200 && (response.type === 'basic' || response.type === 'cors')) {
           const responseCopy = response.clone();
           caches.open(CACHE_NAME).then((cache) => {
             cache.put(event.request, responseCopy);

@@ -1,5 +1,5 @@
 import unittest
-from app import compute_winner, DAILY_STEP_LIMIT
+from app import DAILY_STEP_LIMIT, clamp_steps, compute_winner, day_of_week_filter, parse_sync_entries
 
 
 class TestLogic(unittest.TestCase):
@@ -21,6 +21,21 @@ class TestLogic(unittest.TestCase):
 
     def test_limit(self):
         self.assertTrue(DAILY_STEP_LIMIT == 11000)
+
+    def test_clamp_steps(self):
+        self.assertEqual(clamp_steps(-5), 0)
+        self.assertEqual(clamp_steps(100), 100)
+        self.assertEqual(clamp_steps(20000), DAILY_STEP_LIMIT)
+
+    def test_parse_sync_entries(self):
+        entries = [{"user_id": 1, "step_count": 100, "log_date": "2026-06-18"}]
+        self.assertEqual(parse_sync_entries(entries), entries)
+        self.assertEqual(parse_sync_entries({"entries": entries}), entries)
+        self.assertEqual(parse_sync_entries({"unsynced_entries": entries}), entries)
+        self.assertEqual(parse_sync_entries("wrong"), [])
+
+    def test_day_of_week_filter_for_iso_date(self):
+        self.assertEqual(day_of_week_filter("2026-06-15"), "Poniedziałek")
 
 
 if __name__ == '__main__':
